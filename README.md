@@ -3,6 +3,10 @@
 **Official implementation of the ICCV 2025 Findings paper:**  
 **"DEARLi: Decoupled Enhancement of Recognition and Localization for Semi-Supervised Panoptic Segmentation"**
 
+<div align="center">
+  <img src="readmes/dearli.gif" alt="DEARLi Overview" width="800"/>
+</div>
+
 ---
 
 ## Getting Started
@@ -12,7 +16,7 @@ For detailed setup instructions -- including installation, dataset preparation, 
 
 ---
 
-## TODO
+#### TODO
 
 - [ ] Upload COCO-Objects dataset generation script and panoptic labels  
 - [ ] Upload SAM-generated pseudolabels and add instructions to generate them  
