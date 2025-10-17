@@ -89,43 +89,6 @@ def add_maskformer2_config(cfg):
     cfg.MODEL.SWIN.OUT_FEATURES = ["res2", "res3", "res4", "res5"]
     cfg.MODEL.SWIN.USE_CHECKPOINT = False
 
-    # mit backbone config
-    cfg.MODEL.MIT = CN()
-    cfg.MODEL.MIT.PRETRAIN_IMG_SIZE = 224
-    cfg.MODEL.MIT.PATCH_SIZE = 4
-    cfg.MODEL.MIT.EMBED_DIMS = [64, 128, 320, 512]
-    cfg.MODEL.MIT.DEPTHS = [3, 6, 40, 3]
-    cfg.MODEL.MIT.NUM_HEADS = [1, 2, 5, 8]
-    cfg.MODEL.MIT.MLP_RATIOS = [4, 4, 4, 4]
-    cfg.MODEL.MIT.SR_RATIOS = [8, 4, 2, 1]
-    cfg.MODEL.MIT.QKV_BIAS = True
-    cfg.MODEL.MIT.QK_SCALE = None
-    cfg.MODEL.MIT.DROP_RATE = 0.0
-    cfg.MODEL.MIT.ATTN_DROP_RATE = 0.0
-    cfg.MODEL.MIT.DROP_PATH_RATE = 0.1
-    cfg.MODEL.MIT.OUT_FEATURES = ["res2", "res3", "res4", "res5"]
-
-    # convnext backbone config
-    cfg.MODEL.CONVNEXT = CN()
-    cfg.MODEL.CONVNEXT.MODEL_NAME = ""
-    cfg.MODEL.CONVNEXT.PRETRAINED = True
-    cfg.MODEL.CONVNEXT.OUT_FEATURES = ["res2", "res3", "res4", "res5"]
-    cfg.MODEL.CONVNEXT.FREEZE_MODEL = False
-    cfg.MODEL.CONVNEXT.CHECKPOINT_PATH = ""
-
-    cfg.MODEL.VIT_PYRAMID = CN()
-    cfg.MODEL.VIT_PYRAMID.MODEL_NAME = "vit_base_patch14_dinov2.lvd142m"
-    cfg.MODEL.VIT_PYRAMID.PRETRAINED = True
-    cfg.MODEL.VIT_PYRAMID.IMG_SIZE = (640, 640)
-    cfg.MODEL.VIT_PYRAMID.OUT_INDICES = [-1]
-    cfg.MODEL.VIT_PYRAMID.PATCH_SIZE = 16
-    cfg.MODEL.VIT_PYRAMID.FEATURE_SCALES = [4, 8, 16, 32]
-    cfg.MODEL.VIT_PYRAMID.DYNAMIC_IMG_SIZE = True
-    cfg.MODEL.VIT_PYRAMID.OUT_FEATURES = ["res2", "res3", "res4", "res5"]
-    cfg.MODEL.VIT_PYRAMID.FREEZE_BACKBONE = False
-    cfg.MODEL.VIT_PYRAMID.NORM_FEATURES = True
-    cfg.MODEL.VIT_PYRAMID.EXCLUDE_KEYS = []
-
     # NOTE: maskformer2 extra configs
     # transformer module
     cfg.MODEL.MASK_FORMER.TRANSFORMER_DECODER_NAME = (
