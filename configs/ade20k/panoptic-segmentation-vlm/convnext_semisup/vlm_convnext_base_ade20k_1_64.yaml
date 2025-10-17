@@ -1,0 +1,60 @@
+_BASE_: ../maskformer2_R50_bs16_160k.yaml
+MODEL:
+  META_ARCHITECTURE: "VisionLanguageMaskFormerStudent"
+  SEM_SEG_HEAD:
+    NAME: "VisionLanguageMaskFormerHead"
+  # backbone part.
+  BACKBONE:
+    NAME: "OpenCLIPBackbone"
+  WEIGHTS: ""
+  PIXEL_MEAN: [122.7709383, 116.7460125, 104.09373615]
+  PIXEL_STD: [68.5005327, 66.6321579, 70.32316305]
+  VL_MASK_FORMER:
+    OPEN_CLIP_MODEL_NAME: "convnext_base_w_320"
+    OPEN_CLIP_PRETRAINED_WEIGHTS: "laion_aesthetic_s13b_b82k_augreg"
+    EMBED_DIM: 640
+    GEOMETRIC_ENSEMBLE_ALPHA: 0.4
+    FREEZE_BACKBONE: True
+    INCLUDE_MASK_POOLINGS: False
+    STUDENT:
+      USE_ZERO_SHOT_BRANCH: True
+  MASK_FORMER:
+    NUM_OBJECT_QUERIES: 200
+    TEST:
+      SEMANTIC_ON: True
+      INSTANCE_ON: False
+      PANOPTIC_ON: True
+      OBJECT_MASK_THRESHOLD: 0.0
+  TEACHER:
+    TYPE: "vl_m2f"
+    EMA_DECAY: 0.999
+    BURN_IN_ITERS: 0
+
+SOLVER:
+  IMS_PER_BATCH: 8
+  MAX_ITER: 80000
+  CHECKPOINT_PERIOD: 80000
+
+TEST:
+  EVAL_PERIOD: 20000
+
+INPUT:
+  DATASET_MAPPER_NAME: "mask_former_panoptic_semi_sup"
+
+DATASETS:
+  TRAIN: ("vlm_ade20k_panoptic_semi_sup_labeled_train_1_64",)
+  TEST: ("vlm_ade20k_panoptic_val",)
+  TRAIN_UNLABELED: "vlm_ade20k_panoptic_semi_sup_unlabeled_train_1_64"
+
+UNLABELED_INPUT:
+  MIN_SIZE_TRAIN: !!python/object/apply:eval ["[int(x * 0.1 * 640) for x in range(5, 21)]"]
+  MIN_SIZE_TRAIN_SAMPLING: "choice"
+  MAX_SIZE_TRAIN: 2560
+  CUTMIX_ENABLED: True
+  CROP:
+    ENABLED: True
+    TYPE: "absolute"
+    SIZE: (640, 640)
+    SINGLE_CATEGORY_MAX_AREA: 1.0
+
+OUTPUT_DIR: "./output/ade20k/panoptic-segmentation-vlm/convnext_semisup/maskformer2_vlm_cn_base_bs8_40k_crop640x640_1_64"
