@@ -60,7 +60,7 @@ To train models on any of the supported datasets, use the script:
 ### Example
 
 ```bash
-./scripts/train_dearli.sh ade20k 1_128 dear
+./scripts/train.sh ade20k 1_128 dear
 ```
 
 
@@ -84,7 +84,7 @@ To evaluate pretrained or custom-trained checkpoints, use:
 ### Example
 
 ```bash
-./scripts/eval_dearli.sh coco-pan 1_128 checkpoints/coco-panoptic_weights/DEAR_coco_pan_1_128.pth 4
+./scripts/eval.sh coco-pan 1_128 checkpoints/coco-panoptic_weights/DEAR_coco_pan_1_128.pth 4
 ```
 
 This script automatically locates the correct config file and runs evaluation in `--eval-only` mode.
