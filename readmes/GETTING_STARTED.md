@@ -1,65 +1,101 @@
-## Getting Started with Mask2Former
+# Getting Started with DEARLi
 
-This document provides a brief intro of the usage of Mask2Former.
+This document provides a concise introduction to using **DEARLi** — including installation, dataset preparation, checkpoints, training, and evaluation.
 
-Please see [Getting Started with Detectron2](https://github.com/facebookresearch/detectron2/blob/master/GETTING_STARTED.md) for full usage.
+For additional background, refer to:
+- [Getting Started with Detectron2](https://github.com/facebookresearch/detectron2/blob/master/GETTING_STARTED.md)
+- [INSTALL.md](./INSTALL.md)
+- [DATASETS.md](./DATASETS.md)
 
+---
 
-### Inference Demo with Pre-trained Models
+## Installation
 
-1. Pick a model and its config file from
-  [model zoo](MODEL_ZOO.md),
-  for example, `configs/coco/panoptic-segmentation/maskformer2_R50_bs16_50ep.yaml`.
-2. We provide `demo.py` that is able to demo builtin configs. Run it with:
+Follow the detailed steps in **[INSTALL.md](./INSTALL.md)** to set up your environment and dependencies.
+
+## Datasets Preparation
+
+Please refer to **[DATASETS.md](./DATASETS.md)** for instructions on downloading and organizing the required datasets (**COCO** and **ADE20K**).
+
+Ensure your dataset directory structure follows the conventions described there.
+
+---
+
+## Checkpoints
+
+All **30 pretrained checkpoints**, along with **2 decoder warmup weights**, are available at the following OneDrive link:  
+🔗 [Download Checkpoints](https://ferhr-my.sharepoint.com/:f:/g/personal/imartinovic_fer_hr/Ekllam9FWTdGnCUAdF4Pc1oB0ifhoTe407oELLxHgsUyLw?e=f9jA2X)
+
+After downloading, create a `checkpoints` directory in the project root and **maintain the same folder structure** as provided on OneDrive:
+
 ```
-cd demo/
-python demo.py --config-file ../configs/coco/panoptic-segmentation/maskformer2_R50_bs16_50ep.yaml \
-  --input input1.jpg input2.jpg \
-  [--other-options]
-  --opts MODEL.WEIGHTS /path/to/checkpoint_file
-```
-The configs are made for training, therefore we need to specify `MODEL.WEIGHTS` to a model from model zoo for evaluation.
-This command will run the inference and show visualizations in an OpenCV window.
-
-For details of the command line arguments, see `demo.py -h` or look at its source code
-to understand its behavior. Some common arguments are:
-* To run __on your webcam__, replace `--input files` with `--webcam`.
-* To run __on a video__, replace `--input files` with `--video-input video.mp4`.
-* To run __on cpu__, add `MODEL.DEVICE cpu` after `--opts`.
-* To save outputs to a directory (for images) or a file (for webcam or video), use `--output`.
-
-
-### Training & Evaluation in Command Line
-
-We provide a script `train_net.py`, that is made to train all the configs provided in Mask2Former.
-
-To train a model with "train_net.py", first
-setup the corresponding datasets following
-[datasets/README.md](./datasets/README.md),
-then run:
-```
-python train_net.py --num-gpus 8 \
-  --config-file configs/coco/panoptic-segmentation/maskformer2_R50_bs16_50ep.yaml
+checkpoints/
+  decoder_warmup_weights/
+    *.pth
+  coco-panoptic_weights/
+    *.pth
+  coco-objects_weights/
+    *.pth
+  ade20k_weights/
+    *.pth
 ```
 
-The configs are made for 8-GPU training.
-Since we use ADAMW optimizer, it is not clear how to scale learning rate with batch size.
-To train on 1 GPU, you need to figure out learning rate and batch size by yourself:
-```
-python train_net.py \
-  --config-file configs/coco/panoptic-segmentation/maskformer2_R50_bs16_50ep.yaml \
-  --num-gpus 1 SOLVER.IMS_PER_BATCH SET_TO_SOME_REASONABLE_VALUE SOLVER.BASE_LR SET_TO_SOME_REASONABLE_VALUE
+
+## Training
+
+To train models on any of the supported datasets, use the script:
+
+```bash
+./scripts/train_dearli.sh <dataset> <split> <method>
 ```
 
-To evaluate a model's performance, use
+### Arguments
+
+| Argument | Options | Description |
+|-----------|----------|-------------|
+| **dataset** | `ade20k`, `coco-obj`, `coco-pan` | Target dataset for training |
+| **split** | ADE20K → `1_128`, `1_64`, `1_32`, `1_16`, `1_8`<br>COCO → `1_512`, `1_256`, `1_128`, `1_64`, `1_32` | Defines the labeled data ratio used for semi-supervised training |
+| **method** | `dear`, `dearli` | Training method; `dearli` adds  additional weights |
+
+### Example
+
+```bash
+./scripts/train_dearli.sh ade20k 1_128 dear
 ```
-python train_net.py \
-  --config-file configs/coco/panoptic-segmentation/maskformer2_R50_bs16_50ep.yaml \
-  --eval-only MODEL.WEIGHTS /path/to/checkpoint_file
-```
-For more options, see `python train_net.py -h`.
 
 
-### Video instance segmentation
-Please use `demo_video/demo.py` for video instance segmentation demo and `train_net_video.py` to train
-and evaluate video instance segmentation models.
+##  Evaluation
+
+To evaluate pretrained or custom-trained checkpoints, use:
+
+```bash
+./scripts/eval_dearli.sh <dataset> <split> <checkpoint_path> [num_gpus]
+```
+
+### Arguments
+
+| Argument | Description |
+|-----------|-------------|
+| **dataset** | `ade20k`, `coco-obj`, or `coco-pan` |
+| **split** | ADE20K → `1_128`, `1_64`, `1_32`, `1_16`, `1_8`<br>COCO → `1_512`, `1_256`, `1_128`, `1_64`, `1_32` |
+| **checkpoint_path** | Path to the model checkpoint (`.pth`) to evaluate |
+| **num_gpus** *(optional)* | Number of GPUs to use (default: `1`) |
+
+### Example
+
+```bash
+./scripts/eval_dearli.sh coco-pan 1_128 checkpoints/coco-panoptic_weights/DEAR_coco_pan_1_128.pth 4
+```
+
+This script automatically locates the correct config file and runs evaluation in `--eval-only` mode.
+
+
+## Summary
+
+| Step | Description |
+|------|--------------|
+| **1.** | Install environment dependencies using [INSTALL.md](./INSTALL.md) |
+| **2.** | Prepare COCO and ADE20K datasets using [DATASETS.md](./DATASETS.md) |
+| **3.** | Download checkpoints from the [OneDrive link](https://ferhr-my.sharepoint.com/:f:/g/personal/imartinovic_fer_hr/Ekllam9FWTdGnCUAdF4Pc1oB0ifhoTe407oELLxHgsUyLw?e=f9jA2X) |
+| **4.** | Train models using `scripts/train_dearli.sh` |
+| **5.** | Evaluate models using `scripts/eval_dearli.sh` |

@@ -203,17 +203,16 @@ _darcs
 
 # project dirs
 /detectron2/model_zoo/configs
-/datasets/*
-!/datasets/*.*
+./datasets/*
+!./datasets/*.txt
+!./datasets/*.py
+!./datasets/*.md
 /projects/*/datasets
 /models
 /snippet
 third_party
-predictions
-logging_ade20k
 checkpoints
-logging
-logging_ade
-pretrained
-semivl_logs
 mask2former/modeling/pixel_decoder/ops/*
+notebooks
+output
+eval_more.sh

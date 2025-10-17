@@ -1,13 +1,26 @@
 ## Installation
 
 ### Requirements
-- Linux or macOS with Python ≥ 3.6
-- PyTorch ≥ 1.9 and [torchvision](https://github.com/pytorch/vision/) that matches the PyTorch installation.
-  Install them together at [pytorch.org](https://pytorch.org) to make sure of this. Note, please check
-  PyTorch version matches that is required by Detectron2.
-- Detectron2: follow [Detectron2 installation instructions](https://detectron2.readthedocs.io/tutorials/install.html).
-- OpenCV is optional but needed by demo and visualization
-- `pip install -r requirements.txt`
+
+Our experiments were conducted within a Conda environment with the following requirements:
+
+- **Operating System**: Linux or macOS
+- **Python**: Version 3.11 or higher (earlier versions might also be compatible)
+- **CUDA**: Version 12.1
+- **PyTorch**: Version 2.1 or higher (earlier versions might also be compatible)
+- **Torchvision**: Ensure that the Torchvision version matches the PyTorch installation. Install both together from [pytorch.org](https://pytorch.org) to ensure compatibility. Note: Verify that the PyTorch version is compatible with Detectron2.
+- **Detectron2**: Follow the [Detectron2 installation instructions](https://detectron2.readthedocs.io/tutorials/install.html).
+- **OpenCV**: Optional, but required for demo and visualization.
+
+To install additional dependencies, use the following command:
+```sh
+pip install -r requirements.txt
+```
+
+Make sure to set up and activate your Conda environment before installing these dependencies.
+
+**Note**: While our experiments were conducted with the specified library versions, earlier versions of Python and PyTorch might also be compatible.
+[Mask2Former INSTALL.md](https://github.com/facebookresearch/Mask2Former/blob/main/INSTALL.md) should also work fine.
 
 ### CUDA kernel for MSDeformAttn
 After preparing the required environment, run the following command to compile CUDA kernel for MSDeformAttn:
@@ -19,29 +32,37 @@ cd mask2former/modeling/pixel_decoder/ops
 sh make.sh
 ```
 
-#### Building on another system
-To build on a system that does not have a GPU device but provide the drivers:
-```bash
-TORCH_CUDA_ARCH_LIST='8.0' FORCE_CUDA=1 python setup.py build install
-```
-
 ### Example conda environment setup
 ```bash
-conda create --name mask2former python=3.8 -y
-conda activate mask2former
-conda install pytorch==1.9.0 torchvision==0.10.0 cudatoolkit=11.1 -c pytorch -c nvidia
+conda create --name dearli python=3.11 -y
+conda activate dearli
+conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=12.1 -c pytorch -c nvidia
 pip install -U opencv-python
 
 # under your working directory
+git clone https://github.com/helen1c/DEARLi.git
+cd DEARLi
+mkdir third-party
+cd third-party
 git clone git@github.com:facebookresearch/detectron2.git
 cd detectron2
 pip install -e .
+cd ..
+
+git clone https://github.com/mlfoundations/open_clip.git
+cd open_clip
+pip install -e .
+cd ..
+
+git clone https://github.com/facebookresearch/segment-anything.git
+cd segment-anything
+pip install -e .
+cd ..
+
 pip install git+https://github.com/cocodataset/panopticapi.git
 pip install git+https://github.com/mcordts/cityscapesScripts.git
 
 cd ..
-git clone git@github.com:facebookresearch/Mask2Former.git
-cd Mask2Former
 pip install -r requirements.txt
 cd mask2former/modeling/pixel_decoder/ops
 sh make.sh
