@@ -64,7 +64,8 @@ fi
 
 # append method args
 NUM_GPUS=1
-BATCH_SIZE=16
+# actually 2x8, 8 labeled and 8 unlabeled
+BATCH_SIZE=8
 SEED=1
 METHOD_ARGS+=(SOLVER.IMS_PER_BATCH $BATCH_SIZE SEED $SEED)
 

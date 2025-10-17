@@ -7,7 +7,7 @@ Our experiments were conducted within a Conda environment with the following req
 - **Operating System**: Linux or macOS
 - **Python**: Version 3.11 or higher (earlier versions might also be compatible)
 - **CUDA**: Version 12.1
-- **PyTorch**: Version 2.1 or higher (earlier versions might also be compatible)
+- **PyTorch**: Version 2.4.1 or higher (earlier versions might also be compatible)
 - **Torchvision**: Ensure that the Torchvision version matches the PyTorch installation. Install both together from [pytorch.org](https://pytorch.org) to ensure compatibility. Note: Verify that the PyTorch version is compatible with Detectron2.
 - **Detectron2**: Follow the [Detectron2 installation instructions](https://detectron2.readthedocs.io/tutorials/install.html).
 - **OpenCV**: Optional, but required for demo and visualization.
@@ -34,10 +34,10 @@ sh make.sh
 
 ### Example conda environment setup
 ```bash
-conda create --name dearli python=3.11 -y
-conda activate dearli
-conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=12.1 -c pytorch -c nvidia
-pip install -U opencv-python
+conda create --name dearliv2 python=3.11.11 -y
+conda activate dearliv2
+pip install numpy==1.26.0
+pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121
 
 # under your working directory
 git clone https://github.com/helen1c/DEARLi.git
@@ -46,7 +46,7 @@ mkdir third-party
 cd third-party
 git clone git@github.com:facebookresearch/detectron2.git
 cd detectron2
-pip install -e .
+pip install .
 cd ..
 
 git clone https://github.com/mlfoundations/open_clip.git
@@ -60,10 +60,9 @@ pip install -e .
 cd ..
 
 pip install git+https://github.com/cocodataset/panopticapi.git
-pip install git+https://github.com/mcordts/cityscapesScripts.git
 
 cd ..
 pip install -r requirements.txt
 cd mask2former/modeling/pixel_decoder/ops
-sh make.sh
+sh make.sh # sometimes it is necessary to change GCC to lower version, you can do it by exporting CC=... CXX=..
 ```
