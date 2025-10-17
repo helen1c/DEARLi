@@ -46,7 +46,7 @@ checkpoints/
 To train models on any of the supported datasets, use the script:
 
 ```bash
-./scripts/train_dearli.sh <dataset> <split> <method>
+./scripts/train.sh <dataset> <split> <method>
 ```
 
 ### Arguments
@@ -69,7 +69,7 @@ To train models on any of the supported datasets, use the script:
 To evaluate pretrained or custom-trained checkpoints, use:
 
 ```bash
-./scripts/eval_dearli.sh <dataset> <split> <checkpoint_path> [num_gpus]
+./scripts/eval.sh <dataset> <split> <checkpoint_path> [num_gpus]
 ```
 
 ### Arguments
