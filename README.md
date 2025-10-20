@@ -1,6 +1,6 @@
 # DEARLi
 
-**Official implementation of the ICCV 2025 Findings Oral Presentation: **  
+**Official implementation of the ICCV 2025 Findings Poster & Oral: **  
 **"DEARLi: Decoupled Enhancement of Recognition and Localization for Semi-Supervised Panoptic Segmentation"**
 
 <div align="center">
